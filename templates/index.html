@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footprints Disabled Impact - Admin Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .header-strip { height: 10px; background: linear-gradient(90deg, #006a4e, #f42a41, #fcd116); }
+        .navbar { background: #003087 !important; padding: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .navbar-brand img { height: 55px; border-radius: 8px; border: 3px solid white; }
+        
+        .tile {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .tile:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .tile-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+        .tile-number { font-size: 3.2rem; font-weight: 900; color: #003087; }
+        .tile-title { font-size: 1.2rem; color: #555; margin-top: 10px; }
+        
+        .general-search { max-width: 500px; margin: 2rem auto; }
+        .footer { background: #003087; color: white; padding: 2rem 0; margin-top: 5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="header-strip"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <img src="/static/logo.png" alt="Logo">
+                FOOTPRINTS DISABLED IMPACT
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-white"><i class="fas fa-user"></i> {{ session.username|default('Admin') }}</span>
+                <a href="/logout" class="btn btn-outline-light">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-primary">ADMIN PORTAL</h1>
+            <p class="lead text-muted">Click a tile to view members in that category</p>
+        </div>
+
+        <!-- GENERAL SEARCH -->
+        <div class="general-search">
+            <form action="/search" class="d-flex">
+                <input type="text" name="query" class="form-control me-2" placeholder="Search all members..." required>
+                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <!-- ALL TILES IN ONE HORIZONTAL LINE — SAME SIZE -->
+        <div class="row g-4 mt-4">
+            <div class="col">
+                <div class="tile" onclick="location.href='/category/all'">
+                    <i class="fas fa-users tile-icon text-success"></i>
+                    <div class="tile-number">{{ total }}</div>
+                    <div class="tile-title">All Members</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tile" onclick="location.href='/category/lame'">
+                    <i class="fas fa-wheelchair tile-icon text-primary"></i>
+                    <div class="tile-number">{{ lame }}</div>
+                    <div class="tile-title">Lame</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tile" onclick="location.href='/category/visual'">
+                    <i class="fas fa-eye-slash tile-icon text-info"></i>
+                    <div class="tile-number">{{ visual }}</div>
+                    <div class="tile-title">Visually Impaired</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tile" onclick="location.href='/category/deaf'">
+                    <i class="fas fa-ear-deaf tile-icon text-warning"></i>
+                    <div class="tile-number">{{ deaf }}</div>
+                    <div class="tile-title">Deaf & Dumb</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tile" onclick="location.href='/category/other'">
+                    <i class="fas fa-hands tile-icon text-danger"></i>
+                    <div class="tile-number">{{ other }}</div>
+                    <div class="tile-title">Other Disabilities</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGISTER BUTTON -->
+        <div class="text-center mt-5">
+            <a href="/register" class="btn btn-success btn-lg px-5">
+                <i class="fas fa-user-plus me-2"></i> Register New Member
+            </a>
+        </div>
+    </div>
+
+    <div class="footer text-center">
+        <p class="mb-0">© 2026 Footprints Disabled Impact • P.O. Box KN 3083, Kaneshie - Accra</p>
+    </div>
+</body>
+</html>

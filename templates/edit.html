@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Edit Member</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: #003087 !important; }
+        .card { border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+        .form-label { font-weight: bold; color: #003087; }
+        .form-control, .form-select { height: 50px; border-radius: 12px; border: 2px solid #ddd; }
+        .form-control:focus, .form-select:focus { border-color: #003087; box-shadow: 0 0 0 0.2rem rgba(0,48,135,.25); }
+        .btn-save { background: #003087; color: white; padding: 18px 90px; font-size: 1.4rem; font-weight: bold; border: none; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,48,135,0.3); transition: all 0.3s ease; cursor: pointer; }
+        .btn-save:hover { background: #00255e; transform: translateY(-4px); box-shadow: 0 15px 40px rgba(0,48,135,0.4); }
+        .btn-save:disabled { background: #666; cursor: not-allowed; opacity: 0.7; }
+        .photo-preview { width: 150px; height: 170px; border: 3px dashed #003087; border-radius: 10px; margin: 20px auto; display: flex; align-items: center; justify-content: center; background: #f0f8ff; }
+        .photo-preview img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+
+        /* MEMBER ID — CLEAN TEXT ONLY, NO BACKGROUND */
+        .member-id-text { font-size: 2.2rem; font-weight: bold; color: #003087; letter-spacing: 3px; text-align: center; margin: 20px 0; }
+
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .form-header img { height: 100px; margin-bottom: 15px; }
+        .org-name { font-size: 2rem; font-weight: bold; color: #003087; }
+        .org-address { color: #666; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container-fluid">
+        <a href="javascript:history.back()" class="btn btn-outline-light btn-lg">Back</a>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <div class="card p-5">
+
+        <!-- LOGO + HEADER -->
+        <div class="form-header">
+            <img src="/static/logo.png" alt="Logo" class="img-fluid">
+            <div class="org-name">FOOTPRINTS DISABLED IMPACT</div>
+            <div class="org-address">P. O. Box KN 3083, Kaneshie - Accra</div>
+        </div>
+
+        <h2 class="text-center mb-4 text-primary fw-bold">EDIT MEMBER DETAILS</h2>
+
+        <!-- MEMBER ID — CLEAN TEXT ONLY -->
+        <div class="text-center mb-5">
+            <p class="mb-2 text-muted">Member ID:</p>
+            <div class="member-id-text">
+                FDI-{{ "%03d"|format(person.id) }}
+            </div>
+        </div>
+
+        <!-- PASSPORT PHOTO PREVIEW -->
+        <div class="text-center mb-4">
+            <div class="photo-preview">
+                {% if person.photo_path %}
+                    <img src="/uploads/{{ person.photo_path }}" alt="Current Passport Photo">
+                {% else %}
+                    <span class="text-muted">No Passport Photo</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row g-4">
+                <!-- Name -->
+                <div class="col-12">
+                    <label class="form-label">Name in full:</label>
+                    <input type="text" name="name" class="form-control form-control-lg" value="{{ person.name }}" required>
+                </div>
+
+                <!-- New Fields -->
+                <div class="col-md-6">
+                    <label class="form-label">Date of Birth:</label>
+                    <input type="date" name="date_of_birth" class="form-control" value="{{ person.date_of_birth or '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Gender:</label>
+                    <select name="gender" class="form-select" required>
+                        <option value="Male" {% if person.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if person.gender == 'Female' %}selected{% endif %}>Female</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Nationality:</label>
+                    <input type="text" name="nationality" class="form-control" value="{{ person.nationality or 'Ghanaian' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Hometown:</label>
+                    <input type="text" name="hometown" class="form-control" value="{{ person.hometown or '' }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Area within Ga West:</label>
+                    <input type="text" name="area_ga_west" class="form-control" value="{{ person.area_ga_west or '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">GPS Digital Address:</label>
+                    <input type="text" name="gps_address" class="form-control" value="{{ person.gps_address or '' }}" placeholder="e.g. GA-123-4567" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Ghana Card Number:</label>
+                    <input type="text" name="ghana_card_number" class="form-control" value="{{ person.ghana_card_number or '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Change Ghana Card Photo (optional):</label>
+                    <input type="file" name="ghana_card_photo" class="form-control" accept="image/*">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">When was the disability first identified?:</label>
+                    <input type="text" name="disability_identified" class="form-control" value="{{ person.disability_identified or '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Cause of Disability (If Known):</label>
+                    <input type="text" name="disability_cause" class="form-control" value="{{ person.disability_cause or '' }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Full Name of Emergency Contact:</label>
+                    <input type="text" name="emergency_name" class="form-control" value="{{ person.emergency_name or '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Relationship to Applicant:</label>
+                    <input type="text" name="emergency_relationship" class="form-control" value="{{ person.emergency_relationship or '' }}" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Contact Number of Emergency Contact:</label>
+                    <input type="text" name="emergency_phone" class="form-control" value="{{ person.emergency_phone or '' }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Are you currently registered with any Disability Organization?</label>
+                    <select name="registered_organization" class="form-select">
+                        <option value="No" {% if person.registered_organization == 'No' %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if person.registered_organization == 'Yes' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">If Yes, state the organization:</label>
+                    <input type="text" name="organization_name" class="form-control" value="{{ person.organization_name or '' }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Any additional notes or support needs:</label>
+                    <textarea name="additional_notes" class="form-control" rows="4">{{ person.additional_notes or '' }}</textarea>
+                </div>
+
+                <!-- Original Fields -->
+                <div class="col-md-6">
+                    <label class="form-label">Marital Status:</label>
+                    <select name="marital_status" class="form-select form-control-lg">
+                        <option value="Single" {% if person.marital_status == 'Single' %}selected{% endif %}>Single</option>
+                        <option value="Married" {% if person.marital_status == 'Married' %}selected{% endif %}>Married</option>
+                        <option value="Divorced" {% if person.marital_status == 'Divorced' %}selected{% endif %}>Divorced</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Educational Level:</label>
+                    <input type="text" name="educational_level" class="form-control" value="{{ person.educational_level or '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Languages Spoken:</label>
+                    <input type="text" name="languages_spoken" class="form-control" value="{{ person.languages_spoken or '' }}" placeholder="e.g. Kasem, Sisaala, Twi">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Profession:</label>
+                    <input type="text" name="profession" class="form-control" value="{{ person.profession or '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">English Speaking Proficiency Level:</label>
+                    <select name="english_proficiency" class="form-select">
+                        <option value="None" {% if person.english_proficiency == 'None' %}selected{% endif %}>None</option>
+                        <option value="A Bit" {% if person.english_proficiency == 'A Bit' %}selected{% endif %}>A Bit</option>
+                        <option value="Good" {% if person.english_proficiency == 'Good' %}selected{% endif %}>Good</option>
+                        <option value="Fluent" {% if person.english_proficiency == 'Fluent' %}selected{% endif %}>Fluent</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone Number:</label>
+                    <input type="text" name="phone_number" class="form-control" value="{{ person.phone_number or '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">E-mail:</label>
+                    <input type="email" name="email" class="form-control" value="{{ person.email or '' }}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Residential Address:</label>
+                    <input type="text" name="residential_address" class="form-control" value="{{ person.residential_address }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Disability Type:</label>
+                    <select name="disability_type" class="form-select" required>
+                        <option value="Lame" {% if person.disability_type == 'Lame' %}selected{% endif %}>Lame</option>
+                        <option value="Visually Impaired" {% if person.disability_type == 'Visually Impaired' %}selected{% endif %}>Visually Impaired</option>
+                        <option value="Deaf & Dumb" {% if person.disability_type == 'Deaf & Dumb' %}selected{% endif %}>Deaf & Dumb</option>
+                        <option value="Other" {% if person.disability_type == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Other - specify:</label>
+                    <input type="text" name="disability_other" class="form-control" value="{{ person.disability_other or '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Degree of Disability in percentage:</label>
+                    <input type="text" name="degree_of_disability" class="form-control" value="{{ person.degree_of_disability or '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">What are your disability needs?:</label>
+                    <input type="text" name="disability_needs" class="form-control" value="{{ person.disability_needs or '' }}" placeholder="e.g. Crutches">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">What are your social needs?:</label>
+                    <input type="text" name="social_needs" class="form-control" value="{{ person.social_needs or '' }}" placeholder="e.g. Capital">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Living Conditions:</label>
+                    <select name="living_conditions" class="form-select">
+                        <option value="Live alone" {% if person.living_conditions == 'Live alone' %}selected{% endif %}>Live alone</option>
+                        <option value="With Family" {% if person.living_conditions == 'With Family' %}selected{% endif %}>With Family</option>
+                        <option value="With Friends" {% if person.living_conditions == 'With Friends' %}selected{% endif %}>With Friends</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Guarantor's Name:</label>
+                    <input type="text" name="guarantor_name" class="form-control" value="{{ person.guarantor_name or '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Guarantor's Phone Number:</label>
+                    <input type="text" name="guarantor_phone" class="form-control" value="{{ person.guarantor_phone or '' }}" required>
+                </div>
+
+                <!-- PHOTO UPLOADS (OPTIONAL CHANGE) -->
+                <div class="col-12 text-center">
+                    <label class="form-label d-block">Change Passport Photo (optional):</label>
+                    <input type="file" name="photo" class="form-control form-control-lg" accept="image/*">
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <label class="form-label d-block fw-bold text-primary">Change Full Body Photo (optional):</label>
+                    <input type="file" name="full_photo" class="form-control form-control-lg" accept="image/*">
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <label class="form-label d-block fw-bold text-primary">Change Ghana Card Photo (optional):</label>
+                    <input type="file" name="ghana_card_photo" class="form-control form-control-lg" accept="image/*">
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-save text-white">SAVE ALL CHANGES</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
