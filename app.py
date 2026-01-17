@@ -343,7 +343,8 @@ with app.app_context():
         users = [
             ("chairman@fdi.com", "admin001"),
             ("secretary@fdi.com", "admin002"),
-            ("organizer@fdi.com", "admin003")
+            ("organizer@fdi.com", "admin003"),
+            ("test@fdi.com","test001")
         ]
 
         for username, password in users:
@@ -355,4 +356,5 @@ with app.app_context():
         print("3 admin accounts created!")
 
 if __name__ == '__main__':
+
     app.run(debug=True)
